@@ -1,0 +1,61 @@
+services:
+  typesense:
+    image: typesense/typesense:30.2
+    restart: always
+    environment:
+      TYPESENSE_DATA_DIR: /data
+      TYPESENSE_API_KEY: ${TYPESENSE_API_KEY}
+      TYPESENSE_ENABLE_CORS: "true"
+      TYPESENSE_ENABLE_SEARCH_ANALYTICS: "true"
+      TYPESENSE_ANALYTICS_DIR: /analytics
+      TYPESENSE_ANALYTICS_FLUSH_INTERVAL: "300"
+      TYPESENSE_MEMORY_USED_MAX_PERCENTAGE: "85"
+      # single node: pin Raft peering to loopback so a new container IP after
+      # recreate/restart can't break the stored cluster config (typesense#2257)
+      TYPESENSE_PEERING_ADDRESS: 127.0.0.1
+    volumes:
+      - typesense-data:/data
+      - typesense-analytics:/analytics
+    networks:
+      - proxy
+    mem_limit: 3g
+    stop_grace_period: 60s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    healthcheck:
+      # image has no curl/wget; bash /dev/tcp hits the unauthenticated /health endpoint
+      test:
+        - CMD
+        - bash
+        - -c
+        - >-
+          exec 3<>/dev/tcp/127.0.0.1/8108 &&
+          printf 'GET /health HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n' >&3 &&
+          grep -q '"ok":true' <&3
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 30s
+    # Routed by the `root` project's Traefik. Only list hosts whose A record really
+    # points at the VPS — a failed ACME order is not retried promptly.
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=root_default
+      - traefik.http.routers.typesense.rule=Host(`${TYPESENSE_DOMAIN:?set TYPESENSE_DOMAIN}`)
+      - traefik.http.routers.typesense.entrypoints=websecure
+      - traefik.http.routers.typesense.tls=true
+      - traefik.http.routers.typesense.tls.certresolver=mytlschallenge
+      - traefik.http.routers.typesense.tls.domains[0].main=${TYPESENSE_DOMAIN}
+      - traefik.http.services.typesense.loadbalancer.server.port=8108
+
+volumes:
+  typesense-data:
+  typesense-analytics:
+
+networks:
+  proxy:
+    name: root_default
+    external: true

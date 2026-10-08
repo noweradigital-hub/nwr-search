@@ -1,0 +1,169 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Nowera Search 0.6.8\n"
+"Language: cs_CZ\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-Domain: nwr-search\n"
+
+msgid "Cena"
+msgstr "Cena"
+
+msgid "Dostupnosť"
+msgstr "Dostupnost"
+
+msgid "Filtre"
+msgstr "Filtry"
+
+msgid "Formát súboru"
+msgstr "Formát souboru"
+
+msgid "Hľadať"
+msgstr "Hledat"
+
+msgid "Hľadať na webe"
+msgstr "Hledat na webu"
+
+msgid "Hľadať produkty"
+msgstr "Hledat produkty"
+
+msgid "Hľadať produkty…"
+msgstr "Hledat produkty…"
+
+msgid "Hľadať…"
+msgstr "Hledat…"
+
+msgid "K produktu %s odporúčame"
+msgstr "K produktu %s doporučujeme"
+
+msgid "Kategórie"
+msgstr "Kategorie"
+
+msgid "Len skladom"
+msgstr "Jen skladem"
+
+msgid "Len v zľave"
+msgstr "Jen ve slevě"
+
+msgid "Mohlo by sa vám páčiť"
+msgstr "Mohlo by se vám líbit"
+
+msgid "Najdrahšie"
+msgstr "Nejdražší"
+
+msgid "Najlacnejšie"
+msgstr "Nejlevnější"
+
+msgid "Najlepšia zhoda"
+msgstr "Nejlepší shoda"
+
+msgid "Najnovšie"
+msgstr "Nejnovější"
+
+msgid "Najobľúbenejšie"
+msgstr "Nejoblíbenější"
+
+msgid "Naposledy prezerané"
+msgstr "Naposledy prohlížené"
+
+msgid "Načítavam…"
+msgstr "Načítám…"
+
+msgid "Nájdené výsledky: %d"
+msgstr "Nalezené výsledky: %d"
+
+msgid "Nájdených produktov: %d"
+msgstr "Nalezených produktů: %d"
+
+msgid "Obľúbené produkty"
+msgstr "Oblíbené produkty"
+
+msgid "Odporúčané"
+msgstr "Doporučené"
+
+msgid "Otvoriť"
+msgstr "Otevřít"
+
+msgid "Pre „%s“ sme nenašli žiadne produkty."
+msgstr "Pro „%s“ jsme nenašli žádné produkty."
+
+msgid "Pre „%s“ sme nič nenašli."
+msgstr "Pro „%s“ jsme nic nenašli."
+
+msgid "Produkty"
+msgstr "Produkty"
+
+msgid "Stiahnuť"
+msgstr "Stáhnout"
+
+msgid "Súbory"
+msgstr "Soubory"
+
+msgid "Typ obsahu"
+msgstr "Typ obsahu"
+
+msgid "Vyhľadávanie je dočasne nedostupné."
+msgstr "Vyhledávání je dočasně nedostupné."
+
+msgid "Vymazať"
+msgstr "Vymazat"
+
+msgid "Vypredané"
+msgstr "Vyprodáno"
+
+msgid "Výsledky"
+msgstr "Výsledky"
+
+msgid "Výsledky vyhľadávania"
+msgstr "Výsledky vyhledávání"
+
+msgid "Všetko"
+msgstr "Vše"
+
+msgid "Zadajte, čo hľadáte."
+msgstr "Zadejte, co hledáte."
+
+msgid "Zavrieť filtre"
+msgstr "Zavřít filtry"
+
+msgid "Zavrieť vyhľadávanie"
+msgstr "Zavřít vyhledávání"
+
+msgid "Značka"
+msgstr "Značka"
+
+msgid "Zobraziť menej"
+msgstr "Zobrazit méně"
+
+msgid "Zobraziť viac"
+msgstr "Zobrazit více"
+
+msgid "Zobraziť výsledky"
+msgstr "Zobrazit výsledky"
+
+msgid "Zobraziť všetky výsledky (%d)"
+msgstr "Zobrazit všechny výsledky (%d)"
+
+msgid "Zoradiť"
+msgstr "Seřadit"
+
+msgid "Zrušiť filtre"
+msgstr "Zrušit filtry"
+
+msgid "Zvoleným filtrom nezodpovedá žiadny produkt."
+msgstr "Zvoleným filtrům neodpovídá žádný produkt."
+
+msgid "Zvoleným filtrom nezodpovedá žiadny výsledok."
+msgstr "Zvoleným filtrům neodpovídá žádný výsledek."
+
+msgid "Zľavy"
+msgstr "Slevy"
+
+msgid "do"
+msgstr "do"
+
+msgid "od"
+msgstr "od"
+

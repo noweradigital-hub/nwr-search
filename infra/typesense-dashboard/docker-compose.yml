@@ -1,0 +1,44 @@
+services:
+  dashboard:
+    image: ghcr.io/bfritscher/typesense-dashboard:2.5.0
+    restart: always
+    environment:
+      # base64 of the served /config.json — it is PUBLIC, so never put apiKey in it:
+      # echo -n '{"node":{"host":"search.example.com","port":"443","protocol":"https","path":"","tls":true}}' | base64
+      TYPESENSE_DASHBOARD_CONFIG: ${TYPESENSE_DASHBOARD_CONFIG:?set TYPESENSE_DASHBOARD_CONFIG}
+    networks:
+      - proxy
+    mem_limit: 128m
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "2"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    # Own origin on purpose: the dashboard keeps the admin key in localStorage,
+    # so it must not share an origin with the public API (TYPESENSE_DOMAIN).
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=root_default
+      - traefik.http.routers.tsdash.rule=Host(`${TYPESENSE_DASHBOARD_DOMAIN:?set TYPESENSE_DASHBOARD_DOMAIN}`)
+      - traefik.http.routers.tsdash.entrypoints=websecure
+      - traefik.http.routers.tsdash.tls=true
+      - traefik.http.routers.tsdash.tls.certresolver=mytlschallenge
+      - traefik.http.routers.tsdash.tls.domains[0].main=${TYPESENSE_DASHBOARD_DOMAIN}
+      - traefik.http.routers.tsdash.middlewares=tsdash-headers
+      - traefik.http.middlewares.tsdash-headers.headers.frameDeny=true
+      - traefik.http.middlewares.tsdash-headers.headers.contentTypeNosniff=true
+      - traefik.http.middlewares.tsdash-headers.headers.referrerPolicy=no-referrer
+      - traefik.http.middlewares.tsdash-headers.headers.stsSeconds=31536000
+      # image also EXPOSEs 443/2019 — pin the port Caddy actually serves on
+      - traefik.http.services.tsdash.loadbalancer.server.port=80
+
+networks:
+  proxy:
+    name: root_default
+    external: true

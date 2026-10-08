@@ -1,0 +1,586 @@
+/*
+ * Nowera Search — results page.
+ * Inherits the --nwr-* tokens from .nwr-search, so a builder can restyle both
+ * the panel and this page from one place.
+ */
+.nwr-results {
+	--nwr-card-gap: 20px;
+	display: block;
+}
+
+/* ------------------------------------------------------------------- field */
+
+.nwr-results .nwr-results__search {
+	display: flex;
+	gap: 8px;
+	margin: 0 0 18px;
+}
+
+.nwr-results .nwr-results__input {
+	flex: 1;
+	min-width: 0;
+	height: var(--nwr-input-height);
+	padding: 0 16px;
+	border: 1px solid var(--nwr-border);
+	border-radius: var(--nwr-radius);
+	background: var(--nwr-surface);
+	color: inherit;
+	font: inherit;
+	box-shadow: none;
+}
+
+.nwr-results .nwr-results__input:focus {
+	outline: none;
+	border-color: var(--nwr-accent);
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--nwr-accent) 18%, transparent);
+}
+
+.nwr-results .nwr-results__submit {
+	height: var(--nwr-input-height);
+	padding: 0 22px;
+	border: 0;
+	border-radius: var(--nwr-radius);
+	background: var(--nwr-accent);
+	color: var(--nwr-on-accent);
+	font: inherit;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+/* -------------------------------------------------------------------- tabs */
+
+.nwr-results .nwr-results__tabs {
+	display: flex;
+	gap: 6px;
+	margin: 0 0 16px;
+	padding-bottom: 2px;
+	overflow-x: auto;
+	scrollbar-width: none;
+}
+
+.nwr-results .nwr-results__tabs[hidden] {
+	display: none;
+}
+
+.nwr-results .nwr-results__tab {
+	display: inline-flex;
+	flex: none;
+	align-items: center;
+	gap: 8px;
+	height: 38px;
+	padding: 0 14px;
+	border: 1px solid var(--nwr-border);
+	border-radius: 999px;
+	background: var(--nwr-surface);
+	color: inherit;
+	font: inherit;
+	font-size: 0.95em;
+	white-space: nowrap;
+	cursor: pointer;
+}
+
+.nwr-results .nwr-results__tab[aria-selected="true"] {
+	border-color: var(--nwr-accent);
+	background: var(--nwr-accent);
+	color: var(--nwr-on-accent);
+}
+
+.nwr-results .nwr-results__tab-count {
+	min-width: 22px;
+	padding: 0 6px;
+	border-radius: 999px;
+	background: var(--nwr-hover);
+	font-size: 12px;
+	line-height: 20px;
+	text-align: center;
+}
+
+.nwr-results .nwr-results__tab[aria-selected="true"] .nwr-results__tab-count {
+	background: color-mix(in srgb, var(--nwr-on-accent) 22%, transparent);
+}
+
+/* --------------------------------------------------------------------- bar */
+
+.nwr-results .nwr-results__bar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	margin-bottom: 16px;
+}
+
+.nwr-results .nwr-results__count {
+	margin: 0;
+	color: var(--nwr-muted);
+	font-size: 0.95em;
+}
+
+.nwr-results .nwr-results__tools {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.nwr-results .nwr-results__toggle {
+	display: none;
+	height: 40px;
+	padding: 0 16px;
+	border: 1px solid var(--nwr-border);
+	border-radius: 999px;
+	background: var(--nwr-surface);
+	color: inherit;
+	font: inherit;
+	cursor: pointer;
+}
+
+.nwr-results .nwr-results__sort-select {
+	height: 40px;
+	max-width: 220px;
+	padding: 0 12px;
+	border: 1px solid var(--nwr-border);
+	border-radius: 999px;
+	background: var(--nwr-surface);
+	color: inherit;
+	font: inherit;
+}
+
+/* ------------------------------------------------------------------ layout */
+
+/* Visibility lives here, not in the script: .has-facets is set once filters exist. */
+.nwr-results .nwr-results__layout {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 28px;
+	align-items: start;
+}
+
+.nwr-results.has-facets .nwr-results__layout {
+	grid-template-columns: 250px minmax(0, 1fr);
+}
+
+.nwr-results .nwr-results__sidebar {
+	display: none;
+}
+
+.nwr-results.has-facets .nwr-results__sidebar {
+	display: block;
+}
+
+.nwr-results .nwr-results__sidebar-head,
+.nwr-results .nwr-results__apply {
+	display: none;
+}
+
+.nwr-results .nwr-results__sidebar-head {
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 12px;
+}
+
+.nwr-results .nwr-results__apply {
+	position: sticky;
+	bottom: 0;
+	width: 100%;
+	height: 46px;
+	margin-top: 20px;
+	border: 0;
+	border-radius: var(--nwr-radius);
+	background: var(--nwr-accent);
+	color: var(--nwr-on-accent);
+	font: inherit;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.nwr-results .nwr-results__sidebar-close {
+	border: 0;
+	background: none;
+	color: inherit;
+	font-size: 26px;
+	line-height: 1;
+	cursor: pointer;
+}
+
+/* ------------------------------------------------------------------ facets */
+
+.nwr-results .nwr-results__group + .nwr-results__group {
+	margin-top: 22px;
+	padding-top: 20px;
+	border-top: 1px solid var(--nwr-border);
+}
+
+.nwr-results .nwr-results__group-title {
+	margin-bottom: 10px;
+	font-size: 0.8em;
+	font-weight: 700;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--nwr-muted);
+}
+
+.nwr-results .nwr-results__option {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 5px 0;
+	cursor: pointer;
+	line-height: 1.3;
+}
+
+.nwr-results .nwr-results__option input {
+	flex: none;
+	margin: 0;
+	accent-color: var(--nwr-accent);
+}
+
+.nwr-results .nwr-results__option span:nth-of-type(1) {
+	flex: 1;
+	min-width: 0;
+}
+
+.nwr-results .nwr-results__facet-count {
+	color: var(--nwr-muted);
+	font-size: 0.85em;
+	font-variant-numeric: tabular-nums;
+}
+
+.nwr-results .nwr-results__more {
+	margin-top: 6px;
+	padding: 0;
+	border: 0;
+	background: none;
+	color: var(--nwr-accent);
+	font: inherit;
+	font-size: 0.9em;
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+.nwr-results .nwr-results__range {
+	display: flex;
+	gap: 10px;
+}
+
+.nwr-results .nwr-results__range label {
+	display: flex;
+	flex: 1;
+	align-items: center;
+	gap: 6px;
+	min-width: 0;
+	color: var(--nwr-muted);
+	font-size: 0.9em;
+}
+
+.nwr-results .nwr-results__range input {
+	width: 100%;
+	min-width: 0;
+	height: 38px;
+	padding: 0 10px;
+	border: 1px solid var(--nwr-border);
+	border-radius: 10px;
+	background: var(--nwr-surface);
+	color: inherit;
+	font: inherit;
+}
+
+/* ------------------------------------------------------------------- chips */
+
+.nwr-results .nwr-results__chips {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin-bottom: 16px;
+}
+
+.nwr-results .nwr-results__chips:empty {
+	display: none;
+}
+
+.nwr-results .nwr-results__chip {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding: 6px 12px;
+	border: 1px solid var(--nwr-border);
+	border-radius: 999px;
+	background: var(--nwr-subtle);
+	color: inherit;
+	font: inherit;
+	font-size: 0.9em;
+	cursor: pointer;
+}
+
+.nwr-results .nwr-results__chip--clear {
+	border-color: transparent;
+	background: none;
+	color: var(--nwr-accent);
+	text-decoration: underline;
+}
+
+/* -------------------------------------------------------------------- grid */
+
+.nwr-results .nwr-results__grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+	gap: var(--nwr-card-gap);
+}
+
+.nwr-results .nwr-results__card {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	color: inherit;
+	text-decoration: none;
+}
+
+.nwr-results .nwr-results__media {
+	position: relative;
+	display: block;
+	overflow: hidden;
+	aspect-ratio: 1;
+	border-radius: var(--nwr-radius);
+	background: var(--nwr-subtle);
+}
+
+.nwr-results .nwr-results__media img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: transform 0.25s ease;
+}
+
+.nwr-results .nwr-results__card:hover .nwr-results__media img {
+	transform: scale(1.04);
+}
+
+.nwr-results .nwr-results__badge {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	padding: 3px 8px;
+	border-radius: 999px;
+	background: rgba(15, 23, 42, 0.78);
+	color: #fff;
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.02em;
+}
+
+.nwr-results .nwr-results__badge--sale {
+	background: var(--nwr-accent);
+	color: var(--nwr-on-accent);
+}
+
+.nwr-results .nwr-results__name {
+	font-weight: 600;
+	line-height: 1.35;
+}
+
+.nwr-results .nwr-results__name mark {
+	background: color-mix(in srgb, var(--nwr-accent) 18%, transparent);
+	color: inherit;
+	padding: 0 1px;
+	border-radius: 3px;
+}
+
+.nwr-results .nwr-results__empty {
+	margin: 0;
+	padding: 28px 0;
+	color: var(--nwr-muted);
+}
+
+.nwr-results .nwr-results__status:empty {
+	display: none;
+}
+
+.nwr-results .nwr-results__status {
+	padding: 16px 0;
+	color: var(--nwr-muted);
+	text-align: center;
+}
+
+.nwr-results.is-loading .nwr-results__grid {
+	opacity: 0.55;
+	transition: opacity 0.15s ease;
+}
+
+/* -------------------------------------------- pages, posts, CPTs and files */
+
+.nwr-results.nwr-results--list .nwr-results__grid {
+	grid-template-columns: minmax(0, 1fr);
+	gap: 10px;
+}
+
+.nwr-results .nwr-results__item {
+	display: flex;
+	align-items: flex-start;
+	gap: 16px;
+	padding: 14px;
+	border: 1px solid var(--nwr-border);
+	border-radius: var(--nwr-radius);
+	background: var(--nwr-surface);
+	color: inherit;
+	text-decoration: none;
+	transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.nwr-results .nwr-results__item:hover {
+	border-color: color-mix(in srgb, var(--nwr-accent) 45%, var(--nwr-border));
+	box-shadow: 0 6px 20px rgba(15, 23, 42, 0.06);
+	color: inherit;
+}
+
+.nwr-results .nwr-results__thumb {
+	flex: 0 0 72px;
+	width: 72px;
+	height: 72px;
+	overflow: hidden;
+	border-radius: 10px;
+	background: var(--nwr-subtle);
+}
+
+.nwr-results .nwr-results__thumb img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	object-fit: cover;
+}
+
+.nwr-results .nwr-results__thumb--icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--nwr-accent);
+}
+
+.nwr-results .nwr-results__item--file .nwr-results__thumb--icon {
+	background: color-mix(in srgb, var(--nwr-accent) 10%, transparent);
+}
+
+.nwr-results .nwr-results__thumb--icon svg {
+	width: 28px;
+	height: 28px;
+}
+
+.nwr-results .nwr-results__body {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	min-width: 0;
+}
+
+.nwr-results .nwr-results__type {
+	color: var(--nwr-accent);
+	font-size: 11px;
+	font-weight: 700;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+}
+
+.nwr-results .nwr-results__excerpt {
+	display: -webkit-box;
+	overflow: hidden;
+	color: var(--nwr-muted);
+	font-size: 0.92em;
+	line-height: 1.45;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 3;
+}
+
+.nwr-results .nwr-results__file {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 10px;
+	color: var(--nwr-muted);
+	font-size: 0.85em;
+	font-weight: 600;
+}
+
+.nwr-results .nwr-results__file-action {
+	color: var(--nwr-accent);
+}
+
+/* Products listed among other content: a compact row instead of a tall tile. */
+.nwr-results.nwr-results--list .nwr-results__card {
+	flex-direction: row;
+	align-items: center;
+	gap: 16px;
+	padding: 14px;
+	border: 1px solid var(--nwr-border);
+	border-radius: var(--nwr-radius);
+	background: var(--nwr-surface);
+}
+
+.nwr-results.nwr-results--list .nwr-results__media {
+	flex: 0 0 72px;
+	width: 72px;
+	height: 72px;
+	border-radius: 10px;
+}
+
+/* ------------------------------------------------------------------ mobile */
+
+@media (max-width: 900px) {
+	.nwr-results.has-facets .nwr-results__layout {
+		display: block;
+	}
+
+	.nwr-results.has-facets .nwr-results__toggle {
+		display: inline-flex;
+		align-items: center;
+	}
+
+	/* The sidebar turns into a drawer that only the Filtre button opens. */
+	.nwr-results.has-facets .nwr-results__sidebar {
+		display: none;
+		position: fixed;
+		z-index: 99999;
+		inset: 0 auto 0 0;
+		width: min(88vw, 340px);
+		padding: 18px 18px 0;
+		overflow-y: auto;
+		overscroll-behavior: contain;
+		background: var(--nwr-surface);
+		box-shadow: 0 20px 60px rgba(15, 23, 42, 0.25);
+	}
+
+	.nwr-results.has-facets.nwr-results--filters .nwr-results__sidebar {
+		display: block;
+	}
+
+	.nwr-results.nwr-results--filters::before {
+		content: "";
+		position: fixed;
+		z-index: 99998;
+		inset: 0;
+		background: rgba(15, 23, 42, 0.4);
+	}
+
+	.nwr-results .nwr-results__sidebar-head {
+		display: flex;
+	}
+
+	.nwr-results .nwr-results__apply {
+		display: block;
+		margin-bottom: 18px;
+	}
+
+	.nwr-results .nwr-results__grid {
+		grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+		gap: 14px;
+	}
+
+	.nwr-results .nwr-results__item {
+		gap: 12px;
+		padding: 12px;
+	}
+
+	.nwr-results .nwr-results__thumb {
+		flex-basis: 56px;
+		width: 56px;
+		height: 56px;
+	}
+}

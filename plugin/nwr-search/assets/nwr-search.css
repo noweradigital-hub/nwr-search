@@ -1,0 +1,714 @@
+/*
+ * Nowera Search — instant search panel.
+ * Picks up the theme accent (Woodmart, Elementor, Bricks) and can be restyled
+ * from any builder by overriding the --nwr-* custom properties on .nwr-search.
+ * Selectors are doubled (.nwr-search .nwr-search__x) to beat theme rules like input[type="search"].
+ */
+.nwr-search {
+	--nwr-accent: var(--wd-primary-color, var(--e-global-color-primary, var(--bricks-color-primary, #1f2937)));
+	--nwr-on-accent: #fff;
+	--nwr-text: inherit;
+	--nwr-muted: #6b7280;
+	--nwr-border: rgba(15, 23, 42, 0.12);
+	--nwr-surface: #fff;
+	--nwr-subtle: rgba(15, 23, 42, 0.035);
+	--nwr-hover: rgba(15, 23, 42, 0.06);
+	--nwr-radius: 14px;
+	--nwr-input-height: 50px;
+	--nwr-panel-width: 900px;
+
+	position: relative;
+	width: 100%;
+	max-width: 100%;
+	color: var(--nwr-text);
+	font: inherit;
+	text-align: left;
+}
+
+.nwr-search--compact {
+	--nwr-input-height: 42px;
+	font-size: 14px;
+}
+
+/* Floating layers appended to <body> by the script. */
+.nwr-search--layer {
+	position: static;
+	width: 0;
+	height: 0;
+}
+
+/* ------------------------------------------------------------------ field */
+
+.nwr-search .nwr-search__form {
+	position: relative;
+	display: flex;
+	flex: 1;
+	align-items: center;
+	margin: 0;
+}
+
+.nwr-search .nwr-search__label {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	white-space: nowrap;
+}
+
+.nwr-search .nwr-search__input {
+	width: 100%;
+	height: var(--nwr-input-height);
+	min-height: var(--nwr-input-height);
+	margin: 0;
+	padding: 0 calc(var(--nwr-input-height) + 34px) 0 20px;
+	border: 1px solid var(--nwr-border);
+	border-radius: 999px;
+	background: var(--nwr-surface);
+	box-shadow: none;
+	color: inherit;
+	font: inherit;
+	line-height: normal;
+	-webkit-appearance: none;
+	appearance: none;
+	transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.nwr-search .nwr-search__input::-webkit-search-cancel-button,
+.nwr-search .nwr-search__input::-webkit-search-decoration {
+	-webkit-appearance: none;
+}
+
+.nwr-search .nwr-search__input:focus {
+	border-color: var(--nwr-accent);
+	outline: none;
+	box-shadow: 0 0 0 4px color-mix(in srgb, var(--nwr-accent) 22%, transparent);
+}
+
+.nwr-search .nwr-search__submit,
+.nwr-search .nwr-search__clear,
+.nwr-search .nwr-search__toggle,
+.nwr-search .nwr-search__close {
+	display: grid;
+	min-width: 0;
+	min-height: 0;
+	margin: 0;
+	padding: 0;
+	place-items: center;
+	border: 0;
+	box-shadow: none;
+	cursor: pointer;
+	line-height: 1;
+}
+
+.nwr-search .nwr-search__submit {
+	position: absolute;
+	top: 50%;
+	right: 5px;
+	width: calc(var(--nwr-input-height) - 10px);
+	height: calc(var(--nwr-input-height) - 10px);
+	border-radius: 50%;
+	background: var(--nwr-accent);
+	color: var(--nwr-on-accent);
+	transform: translateY(-50%);
+}
+
+.nwr-search .nwr-search__clear {
+	position: absolute;
+	top: 50%;
+	right: calc(var(--nwr-input-height) + 2px);
+	width: 30px;
+	height: 30px;
+	border-radius: 50%;
+	background: transparent;
+	color: var(--nwr-muted);
+	transform: translateY(-50%);
+}
+
+.nwr-search .nwr-search__clear[hidden],
+.nwr-search .nwr-search__panel[hidden],
+.nwr-search.nwr-search--sheet[hidden] {
+	display: none !important;
+}
+
+.nwr-search.is-loading .nwr-search__submit svg {
+	animation: nwr-search-pulse 0.9s ease-in-out infinite;
+}
+
+@keyframes nwr-search-pulse {
+	50% {
+		opacity: 0.35;
+	}
+}
+
+/* ------------------------------------------------------------------ panel */
+
+.nwr-search .nwr-search__panel {
+	overflow: auto;
+	overscroll-behavior: contain;
+	border: 1px solid var(--nwr-border);
+	border-radius: var(--nwr-radius);
+	background: var(--nwr-surface);
+	box-shadow: 0 30px 60px -18px rgba(15, 23, 42, 0.28), 0 8px 18px -8px rgba(15, 23, 42, 0.12);
+	color: var(--nwr-text);
+	font: inherit;
+	text-align: left;
+}
+
+.nwr-search--layer .nwr-search__panel {
+	position: fixed;
+	z-index: 99999;
+	animation: nwr-search-in 0.14s ease-out;
+}
+
+@keyframes nwr-search-in {
+	from {
+		opacity: 0;
+		transform: translateY(-4px);
+	}
+}
+
+.nwr-search .nwr-search__body {
+	display: grid;
+	grid-template-columns: 230px minmax(0, 1fr);
+}
+
+.nwr-search .nwr-search__body--single {
+	grid-template-columns: minmax(0, 1fr);
+}
+
+.nwr-search .nwr-search__aside {
+	padding: 20px 14px 20px 20px;
+	border-right: 1px solid var(--nwr-border);
+	background: var(--nwr-subtle);
+}
+
+.nwr-search .nwr-search__main {
+	min-width: 0;
+	padding: 20px;
+}
+
+.nwr-search .nwr-search__block + .nwr-search__block {
+	margin-top: 18px;
+	padding-top: 16px;
+	border-top: 1px dashed var(--nwr-border);
+}
+
+.nwr-search .nwr-search__heading {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 12px;
+	margin: 0 0 10px;
+	padding: 0 8px;
+	color: var(--nwr-muted);
+	font-size: 12px;
+	font-weight: 600;
+	letter-spacing: 0.08em;
+	line-height: 1.4;
+	text-transform: uppercase;
+}
+
+/* "All results (12)" for one content type. */
+.nwr-search .nwr-search__more {
+	flex: none;
+	color: var(--nwr-accent);
+	font-size: 12px;
+	font-weight: 600;
+	letter-spacing: 0;
+	text-decoration: none;
+	text-transform: none;
+}
+
+.nwr-search .nwr-search__more:hover {
+	text-decoration: underline;
+}
+
+.nwr-search .nwr-search__categories {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+}
+
+.nwr-search .nwr-search__category {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 9px 10px;
+	border-radius: 9px;
+	color: inherit;
+	line-height: 1.3;
+	text-decoration: none;
+}
+
+.nwr-search .nwr-search__count {
+	flex: none;
+	min-width: 26px;
+	padding: 1px 7px;
+	border-radius: 999px;
+	background: var(--nwr-hover);
+	color: var(--nwr-muted);
+	font-size: 12px;
+	text-align: center;
+}
+
+.nwr-search .nwr-search__products {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+	gap: 4px;
+}
+
+.nwr-search .nwr-search__product {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	padding: 8px;
+	border-radius: 11px;
+	color: inherit;
+	text-decoration: none;
+}
+
+.nwr-search .nwr-search__thumb {
+	flex: 0 0 64px;
+	width: 64px;
+	height: 64px;
+	overflow: hidden;
+	border-radius: 9px;
+	background: var(--nwr-subtle);
+}
+
+.nwr-search .nwr-search__thumb img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	object-fit: cover;
+}
+
+.nwr-search .nwr-search__info {
+	display: flex;
+	flex-direction: column;
+	gap: 3px;
+	min-width: 0;
+}
+
+.nwr-search .nwr-search__title {
+	display: -webkit-box;
+	overflow: hidden;
+	font-weight: 500;
+	line-height: 1.3;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+}
+
+.nwr-search .nwr-search__title mark {
+	padding: 0;
+	background: none;
+	box-shadow: inset 0 -0.38em 0 color-mix(in srgb, var(--nwr-accent) 35%, transparent);
+	color: inherit;
+	font-weight: 700;
+}
+
+.nwr-search .nwr-search__price {
+	font-size: 0.95em;
+	line-height: 1.3;
+}
+
+.nwr-search .nwr-search__price ins {
+	background: none;
+	font-weight: 600;
+	text-decoration: none;
+}
+
+.nwr-search .nwr-search__price del {
+	margin-right: 4px;
+	color: var(--nwr-muted);
+	font-size: 0.9em;
+}
+
+.nwr-search .nwr-search__from {
+	color: var(--nwr-muted);
+	font-size: 0.9em;
+}
+
+.nwr-search .nwr-search__badge {
+	color: #b42318;
+	font-size: 12px;
+}
+
+/* Pages, posts, custom post types and files. */
+.nwr-search .nwr-search__icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
+	color: var(--nwr-accent);
+}
+
+.nwr-search .nwr-search__item--file .nwr-search__thumb {
+	background: color-mix(in srgb, var(--nwr-accent) 10%, transparent);
+}
+
+.nwr-search .nwr-search__excerpt {
+	display: -webkit-box;
+	overflow: hidden;
+	color: var(--nwr-muted);
+	font-size: 0.85em;
+	line-height: 1.35;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+}
+
+.nwr-search .nwr-search__file {
+	align-self: flex-start;
+	padding: 1px 8px;
+	border-radius: 999px;
+	background: var(--nwr-hover);
+	color: var(--nwr-muted);
+	font-size: 12px;
+	font-weight: 600;
+	line-height: 1.6;
+}
+
+.nwr-search .nwr-search__all {
+	position: sticky;
+	bottom: 0;
+	display: block;
+	padding: 15px 20px;
+	border-top: 1px solid var(--nwr-border);
+	background: var(--nwr-surface);
+	color: var(--nwr-accent);
+	font-weight: 600;
+	text-align: center;
+	text-decoration: none;
+}
+
+.nwr-search .nwr-search__category:hover,
+.nwr-search .nwr-search__product:hover,
+.nwr-search .nwr-search__all:hover {
+	background: var(--nwr-hover);
+	color: inherit;
+}
+
+/* Keyboard selection is tinted with the accent so it stays visible on any surface. */
+.nwr-search .nwr-search__category.is-active,
+.nwr-search .nwr-search__product.is-active,
+.nwr-search .nwr-search__all.is-active {
+	background: color-mix(in srgb, var(--nwr-accent) 14%, var(--nwr-surface));
+	color: inherit;
+}
+
+.nwr-search .nwr-search__all:hover,
+.nwr-search .nwr-search__all.is-active {
+	color: var(--nwr-accent);
+}
+
+.nwr-search .nwr-search__empty,
+.nwr-search .nwr-search__error {
+	padding: 28px 24px;
+	color: var(--nwr-muted);
+	text-align: center;
+}
+
+/* ---------------------------------------------------------------- overlay */
+
+.nwr-search--overlay {
+	width: auto;
+}
+
+.nwr-search .nwr-search__toggle {
+	/* 44 px = minimum touch target (WCAG 2.5.5 / Apple HIG). */
+	width: 44px;
+	height: 44px;
+	border-radius: 50%;
+	background: transparent;
+	/* currentColor on `color` itself = the inherited header colour. */
+	color: var(--nwr-icon, currentColor);
+}
+
+.nwr-search .nwr-search__toggle svg {
+	width: 22px;
+	height: 22px;
+}
+
+.nwr-search.nwr-search--sheet {
+	position: fixed;
+	z-index: 100000;
+	inset: 0;
+	display: flex;
+	width: auto;
+	flex-direction: column;
+	background: var(--nwr-surface);
+	animation: nwr-search-in 0.16s ease-out;
+}
+
+.nwr-search--sheet .nwr-search__sheet-bar {
+	box-sizing: border-box;
+	display: flex;
+	width: 100%;
+	max-width: 960px;
+	align-items: center;
+	gap: 8px;
+	margin: 0 auto;
+	padding: 12px 12px 10px;
+}
+
+.nwr-search .nwr-search__close {
+	flex: none;
+	width: 42px;
+	height: 42px;
+	border-radius: 50%;
+	background: var(--nwr-hover);
+	color: inherit;
+}
+
+.nwr-search--sheet .nwr-search__panel {
+	box-sizing: border-box;
+	width: 100%;
+	max-width: 960px;
+	flex: 1;
+	margin: 0 auto;
+	border: 0;
+	border-radius: 0;
+	box-shadow: none;
+}
+
+html.nwr-search-locked,
+html.nwr-search-locked body {
+	overflow: hidden;
+}
+
+/* Icon with a text next to it: [nwr_search layout="bar" label="Hľadať"]. */
+.nwr-search .nwr-search__toggle.nwr-search__toggle--label {
+	display: inline-flex;
+	width: auto;
+	gap: 8px;
+	padding: 0 14px 0 10px;
+	border-radius: 999px;
+	font: inherit;
+}
+
+/* ----------------------------------------------------- full-width bar */
+
+.nwr-search--bar {
+	width: auto;
+}
+
+/* A band across the whole page; results drop below the field inside it. */
+.nwr-search.nwr-search--sheet.nwr-search--bar {
+	inset: var(--nwr-bar-top, 0px) 0 auto 0;
+	max-height: calc(100dvh - var(--nwr-bar-top, 0px));
+	border-bottom: 1px solid var(--nwr-border);
+	box-shadow: 0 28px 60px -24px rgba(15, 23, 42, 0.35);
+	animation: nwr-search-drop 0.2s ease-out;
+}
+
+.nwr-search--bar .nwr-search__sheet-bar {
+	--nwr-input-height: 58px;
+	max-width: var(--nwr-bar-width, 1200px);
+	gap: 12px;
+	padding: 20px 24px;
+}
+
+.nwr-search--bar .nwr-search__sheet-bar .nwr-search__input {
+	font-size: 1.1em;
+}
+
+.nwr-search--bar .nwr-search__sheet-bar .nwr-search__close {
+	width: 48px;
+	height: 48px;
+}
+
+.nwr-search--bar.nwr-search--sheet .nwr-search__panel {
+	flex: 0 1 auto;
+	min-height: 0;
+	max-width: var(--nwr-bar-width, 1200px);
+	border-top: 1px solid var(--nwr-border);
+}
+
+.nwr-search--bar .nwr-search__body {
+	grid-template-columns: 270px minmax(0, 1fr);
+}
+
+.nwr-search__backdrop {
+	position: fixed;
+	z-index: 99999;
+	inset: 0;
+	background: rgba(15, 23, 42, 0.45);
+	animation: nwr-search-fade 0.2s ease-out;
+}
+
+.nwr-search__backdrop[hidden] {
+	display: none;
+}
+
+/* fullwidth="no": a box under the icon instead of a band across the page (desktop only). */
+@media (min-width: 681px) {
+	.nwr-search.nwr-search--sheet.nwr-search--bar.nwr-search--boxed {
+		inset: auto;
+		top: var(--nwr-bar-top, 72px);
+		left: 16px;
+		width: min(var(--nwr-bar-width, 760px), calc(100vw - 32px));
+		max-height: calc(100dvh - var(--nwr-bar-top, 72px) - 16px);
+		overflow: hidden;
+		border: 1px solid var(--nwr-border);
+		border-radius: var(--nwr-radius);
+		box-shadow: 0 30px 70px -24px rgba(15, 23, 42, 0.4);
+	}
+
+	.nwr-search--boxed .nwr-search__sheet-bar {
+		--nwr-input-height: 50px;
+		max-width: none;
+		padding: 14px 16px;
+	}
+
+	.nwr-search--boxed.nwr-search--sheet .nwr-search__panel {
+		max-width: none;
+	}
+
+	.nwr-search--boxed .nwr-search__body {
+		grid-template-columns: 220px minmax(0, 1fr);
+	}
+}
+
+@keyframes nwr-search-drop {
+	from {
+		opacity: 0;
+		transform: translateY(-16px);
+	}
+}
+
+@keyframes nwr-search-fade {
+	from {
+		opacity: 0;
+	}
+}
+
+/* ----------------------------------------------------------------- mobile */
+
+@media (max-width: 680px) {
+	.nwr-search .nwr-search__body {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.nwr-search .nwr-search__aside {
+		position: relative;
+		padding: 12px 0 10px;
+		border-right: 0;
+		border-bottom: 1px solid var(--nwr-border);
+	}
+
+	.nwr-search .nwr-search__aside::after {
+		position: absolute;
+		top: 34px;
+		right: 0;
+		bottom: 10px;
+		width: 44px;
+		background: linear-gradient(90deg, transparent, color-mix(in srgb, #0f172a 3.5%, var(--nwr-surface)));
+		content: "";
+		opacity: 0;
+		pointer-events: none;
+		transition: opacity 0.15s ease;
+	}
+
+	.nwr-search .nwr-search__aside.has-more::after {
+		opacity: 1;
+	}
+
+	.nwr-search .nwr-search__aside .nwr-search__heading {
+		padding: 0 14px;
+	}
+
+	/* One swipeable row instead of a wall of pills pushing products off screen. */
+	/* A pure horizontal scroller: no vertical overflow for the browser to lock onto. */
+	.nwr-search .nwr-search__categories {
+		flex-direction: row;
+		flex-wrap: nowrap;
+		gap: 6px;
+		overflow-x: auto;
+		overflow-y: hidden;
+		overscroll-behavior-x: contain;
+		padding: 0 14px 2px;
+		scrollbar-width: none;
+		touch-action: pan-x;
+	}
+
+	.nwr-search .nwr-search__categories::-webkit-scrollbar {
+		display: none;
+	}
+
+	.nwr-search .nwr-search__category {
+		flex: none;
+		padding: 7px 12px;
+		border: 1px solid var(--nwr-border);
+		border-radius: 999px;
+		white-space: nowrap;
+	}
+
+	.nwr-search .nwr-search__category--extra {
+		display: none;
+	}
+
+	.nwr-search .nwr-search__main {
+		padding: 12px 8px;
+	}
+
+	.nwr-search .nwr-search__products {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 2px;
+	}
+
+	.nwr-search .nwr-search__product {
+		min-height: 64px;
+		padding: 6px 8px;
+	}
+
+	.nwr-search .nwr-search__thumb {
+		flex-basis: 56px;
+		width: 56px;
+		height: 56px;
+	}
+
+	.nwr-search--layer .nwr-search__panel {
+		border-radius: 12px;
+	}
+
+	/* On phones the band becomes the same full-screen search as the overlay. */
+	.nwr-search.nwr-search--sheet.nwr-search--bar {
+		inset: 0;
+		max-height: none;
+		border-bottom: 0;
+		box-shadow: none;
+	}
+
+	.nwr-search--bar .nwr-search__sheet-bar {
+		--nwr-input-height: 50px;
+		gap: 8px;
+		padding: 12px 12px 10px;
+	}
+
+	.nwr-search--bar .nwr-search__sheet-bar .nwr-search__close {
+		width: 42px;
+		height: 42px;
+	}
+
+	.nwr-search--bar.nwr-search--sheet .nwr-search__panel {
+		flex: 1;
+		border-top: 0;
+	}
+
+	.nwr-search__backdrop {
+		display: none;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.nwr-search--layer .nwr-search__panel,
+	.nwr-search.nwr-search--sheet,
+	.nwr-search__backdrop,
+	.nwr-search.is-loading .nwr-search__submit svg {
+		animation: none;
+	}
+}
