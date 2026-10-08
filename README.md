@@ -40,3 +40,6 @@ npx @wp-playground/cli@latest server --port=9400 --php=8.3 --login --blueprint=p
 ```
 - `blueprint.json`: WooCommerce obchod, `blueprint-universal.json`: web bez WooCommerce (Bricks + ACPT).
 - Skripty na `/nwr-tests/<skript>.php` (seed, reindex, frontend, výsledky, boost, preklady…). `frontend-setup.php` a `results-setup.php` berú `?site=<collection>` a používajú iba verejný search kľúč.
+
+## Licencia
+GPL-2.0-or-later, plné znenie v [LICENSE](LICENSE).
